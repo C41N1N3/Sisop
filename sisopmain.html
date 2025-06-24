@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operating Systems: The Core of Computing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+        }
+        .header-gradient {
+            background: linear-gradient(90deg, #0582CA, #00A6FB);
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        h1, h2, h3 {
+            font-weight: 700;
+        }
+        h2 {
+            color: #006494;
+        }
+        .accent-text {
+            color: #FBAF00;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flowchart-node {
+            border: 2px solid #0582CA;
+            background-color: #e0f2fe;
+            color: #006494;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        .flowchart-arrow {
+            font-size: 1.5rem;
+            color: #0582CA;
+            line-height: 1;
+        }
+        .llm-explanation {
+            background-color: #e0f2fe;
+            border-left: 4px solid #00A6FB;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+            color: #006494;
+            display: none; /* Hidden by default */
+        }
+        .llm-explanation.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- 
+    Palette Name: Energetic & Playful
+    #00A6FB (Bright Blue)
+    #0582CA (Medium Blue)
+    #006494 (Dark Blue)
+    #FBAF00 (Yellow/Gold)
+    #E49B0F (Darker Yellow/Orange)
+    
+    Narrative & Structure Plan:
+    1. Hook: Title and subtitle introducing the OS as the core of computing.
+    2. Core Functions: What an OS does, presented in clear, icon-driven cards.
+    3. OS Evolution: A timeline showing the progression from Batch OS to modern systems.
+    4. Process Management: Visualizing how the OS handles tasks, including Process States and a comparison of CPU scheduling algorithms.
+    5. Memory Management: Explaining memory concepts with charts for fragmentation and page replacement.
+    6. Concurrency Challenges: Illustrating Deadlock conditions and synchronization concepts.
+    7. Data Organization: A comparison of File Systems.
+    8. Security: Highlighting common threats and protection mechanisms.
+    9. Conclusion: Summarizing the OS's role.
+    
+    Visualization Choices:
+    - OS Functions: Goal: Organize. Method: HTML/CSS grid with Unicode icons. Justification: Clear, scannable overview of core roles.
+    - OS Evolution: Goal: Change. Method: HTML/CSS vertical timeline. Justification: Shows historical progression effectively.
+    - Process States: Goal: Organize. Method: HTML/CSS flowchart. Justification: Visually represents the lifecycle of a process. NO SVG/Mermaid.
+    - CPU Scheduling: Goal: Compare. Visualization: Radar Chart. Library: Chart.js (Canvas). Justification: Excellent for comparing multiple entities (algorithms) across multiple variables (metrics).
+    - Memory Fragmentation: Goal: Inform. Visualization: Donut Chart. Library: Chart.js (Canvas). Justification: Simple, effective way to show a part-to-whole relationship (used vs. wasted memory).
+    - Page Replacement: Goal: Compare. Visualization: Bar Chart. Library: Chart.js (Canvas). Justification: Direct comparison of performance (page faults) across different algorithms.
+    - Deadlock Conditions: Goal: Organize. Method: HTML/CSS circular layout. Justification: Visually reinforces the 'Circular Wait' concept. NO SVG/Mermaid.
+    - File System Comparison: Goal: Compare. Visualization: Bar Chart. Library: Chart.js (Canvas). Justification: Clear comparison of features between FAT32 and NTFS.
+    - I/O Method Efficiency: Goal: Compare. Visualization: Bar Chart. Library: Chart.js (Canvas). Justification: Shows the dramatic reduction in CPU load from older to modern I/O methods.
+    - Security Threats: Goal: Compare. Visualization: Bubble Chart. Library: Chart.js (Canvas). Justification: Allows comparison on two axes (Prevalence vs. Impact) through position and bubble size.
+    
+    Confirmation: NEITHER Mermaid JS NOR SVG were used anywhere in this output. All charts are rendered using Chart.js on a Canvas element. All diagrams are built with structured HTML and styled with Tailwind CSS.
+    -->
+
+    <header class="header-gradient text-white p-8 text-center sticky top-0 z-10 shadow-lg">
+        <h1 class="text-4xl md:text-5xl font-black">THE ARCHITECT OF DIGITAL WORLDS</h1>
+        <p class="text-xl mt-2">An Interactive Guide to Operating Systems</p>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="intro" class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-4">What is an Operating System?</h2>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600">
+                An Operating System (OS) is the foundational software that manages all computer hardware and software resources. It acts as the essential intermediary between you and the computer, providing the platform upon which all applications run. Without it, a computer is just a collection of electronics.
+            </p>
+        </section>
+
+        <section id="functions" class="mb-16">
+            <div class="flex items-center justify-center mb-8">
+                <h2 class="text-3xl font-bold text-center">Core Functions: The OS at Work</h2>
+                <button class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200" onclick="generateExplanation('functionsExplanation', 'The multifaceted nature of an operating system is best understood through its core functions, each vital for the seamless operation of a computing device. At its heart, the OS excels in resource management, a critical responsibility that encompasses the allocation and oversight of the central processing unit (CPU), memory, various input/output (I/O) devices, and the file system. Beyond resource allocation, the OS facilitates program execution, providing the necessary platform for users to run diverse applications. Security and protection are paramount, with the OS implementing mechanisms to prevent unauthorized access and ensure the integrity and confidentiality of data. Furthermore, it aids in error detection and handling, identifying and addressing system malfunctions. The OS also performs job accounting, meticulously tracking the resources consumed by different tasks and users. Lastly, it ensures effective coordination between various software components and users, maintaining a harmonious computing environment.')">✨ Pelajari Lebih Lanjut</button>
+            </div>
+            <div id="functionsExplanation" class="llm-explanation"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card text-center">
+                    <div class="text-5xl mb-4 accent-text">🧠</div>
+                    <h3 class="text-xl font-semibold mb-2">Resource Management</h3>
+                    <p class="text-slate-600">Allocates CPU time, memory, and I/O devices among competing processes, ensuring fair and efficient use.</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-5xl mb-4 accent-text">🏃</div>
+                    <h3 class="text-xl font-semibold mb-2">Process Management</h3>
+                    <p class="text-slate-600">Manages the execution, scheduling, and termination of programs (processes and threads).</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-5xl mb-4 accent-text">🗄️</div>
+                    <h3 class="text-xl font-semibold mb-2">File System Control</h3>
+                    <p class="text-slate-600">Organizes and controls file storage, retrieval, and access on devices like hard drives and SSDs.</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-5xl mb-4 accent-text">🛡️</div>
+                    <h3 class="text-xl font-semibold mb-2">Security & Protection</h3>
+                    <p class="text-slate-600">Enforces access control policies and protects the system from unauthorized access and malicious threats.</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-5xl mb-4 accent-text">🤝</div>
+                    <h3 class="text-xl font-semibold mb-2">Process Synchronization</h3>
+                    <p class="text-slate-600">Coordinates concurrent processes to prevent data corruption and deadlocks when sharing resources.</p>
+                </div>
+                 <div class="card text-center">
+                    <div class="text-5xl mb-4 accent-text">💬</div>
+                    <h3 class="text-xl font-semibold mb-2">I/O Management</h3>
+                    <p class="text-slate-600">Manages communication with all input/output devices like keyboards, printers, and network cards.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="evolution" class="mb-16">
+            <div class="flex items-center justify-center mb-12">
+                <h2 class="text-3xl font-bold text-center">The Evolution of Operating Systems</h2>
+                <button class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200" onclick="generateExplanation('evolutionExplanation', 'The evolution of operating systems has been a direct response to changing user needs and advancements in hardware capabilities. Each type emerged to address specific challenges and enable new computing paradigms. The progression from simple, sequential Batch OS to the interactive Time-sharing systems, and further to the networked Distributed and time-critical Real-Time OS, clearly illustrates this evolutionary path. This continuous adaptation of OS design to technological advancements and evolving user requirements underscores its dynamic nature.')">✨ Pelajari Lebih Lanjut</button>
+            </div>
+            <div id="evolutionExplanation" class="llm-explanation"></div>
+            <div class="relative max-w-2xl mx-auto">
+                <div class="absolute left-1/2 w-1 bg-blue-200 h-full -translate-x-1/2"></div>
+                <div class="relative mb-8">
+                    <div class="absolute left-1/2 w-4 h-4 bg-blue-500 rounded-full -translate-x-1/2 mt-1.5"></div>
+                    <div class="card w-full md:w-5/12 md:ml-auto p-4 md:mr-[8.33%]">
+                        <h3 class="font-bold text-lg text-blue-800">Batch OS</h3>
+                        <p class="text-sm text-slate-600">Processed jobs in batches without user interaction. Focused on maximizing CPU throughput.</p>
+                    </div>
+                </div>
+                <div class="relative mb-8">
+                    <div class="absolute left-1/2 w-4 h-4 bg-blue-500 rounded-full -translate-x-1/2 mt-1.5"></div>
+                    <div class="card w-full md:w-5/12 p-4 md:ml-[8.33%]">
+                         <h3 class="font-bold text-lg text-blue-800">Multiprogramming OS</h3>
+                         <p class="text-sm text-slate-600">Kept multiple jobs in memory, switching between them to keep the CPU busy during I/O waits.</p>
+                    </div>
+                </div>
+                <div class="relative mb-8">
+                    <div class="absolute left-1/2 w-4 h-4 bg-blue-500 rounded-full -translate-x-1/2 mt-1.5"></div>
+                    <div class="card w-full md:w-5/12 md:ml-auto p-4 md:mr-[8.33%]">
+                        <h3 class="font-bold text-lg text-blue-800">Time-Sharing OS</h3>
+                        <p class="text-sm text-slate-600">Gave each user a time slice (quantum), creating interactive computing for multiple simultaneous users.</p>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="absolute left-1/2 w-4 h-4 bg-blue-500 rounded-full -translate-x-1/2 mt-1.5"></div>
+                    <div class="card w-full md:w-5/12 p-4 md:ml-[8.33%]">
+                         <h3 class="font-bold text-lg text-blue-800">Distributed & Real-Time OS</h3>
+                         <p class="text-sm text-slate-600">Manages networked computers as one system (Distributed) or systems with strict time constraints (RTOS).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="process-management" class="mb-16">
+            <div class="flex items-center justify-center mb-8">
+                <h2 class="text-3xl font-bold text-center">Process & CPU Management</h2>
+                <button class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200" onclick="generateExplanation('processManagementExplanation', 'The operating system\'s ability to manage the execution of programs is central to its functionality. This involves distinguishing between processes (independent program executions) and threads (lightweight components within a process), overseeing their states (New, Ready, Running, Waiting, Terminated), and intelligently scheduling their access to the CPU. CPU scheduling aims to ensure efficient CPU utilization and effective process execution, balancing metrics like throughput, response time, and fairness through various algorithms like FCFS, SJF, SRTF, and Round Robin.')">✨ Pelajari Lebih Lanjut</button>
+            </div>
+            <div id="processManagementExplanation" class="llm-explanation"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-4 text-center">The Lifecycle of a Process</h3>
+                    <p class="text-center text-slate-600 mb-6">A process transitions through several states from creation to termination. The OS manages these transitions.</p>
+                    <div class="flex flex-col items-center space-y-2">
+                        <div class="flowchart-node">New</div>
+                        <div class="flowchart-arrow">↓</div>
+                        <div class="flowchart-node">Ready</div>
+                        <div class="flowchart-arrow">↓ <span class="text-sm text-slate-500">(Scheduler Dispatch)</span></div>
+                        <div class="flowchart-node bg-yellow-100 border-yellow-400 text-yellow-800">Running</div>
+                        <div class="flex w-full justify-around">
+                            <div class="flex flex-col items-center">
+                                <div class="flowchart-arrow">↙</div>
+                                <div class="flowchart-node">Waiting / Blocked</div>
+                                <div class="flowchart-arrow">↖ <span class="text-sm text-slate-500">(I/O or event complete)</span></div>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="flowchart-arrow">↘</div>
+                                <div class="flowchart-node">Terminated</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Comparing CPU Scheduling Algorithms</h3>
+                    <p class="text-center text-slate-600 mb-6">There's no single "best" algorithm. Each makes trade-offs between fairness, efficiency, and responsiveness.</p>
+                    <div class="chart-container">
+                        <canvas id="cpuSchedulingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="memory-management" class="mb-16">
+            <div class="flex items-center justify-center mb-8">
+                <h2 class="text-3xl font-bold text-center">Memory Management: The Art of Allocation</h2>
+                <button class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200" onclick="generateExplanation('memoryManagementExplanation', 'Memory management is a critical function of the operating system, concerned with the efficient handling of main memory by allocating and de-allocating it for processes, tracking usage, and minimizing fragmentation. A key concept is the distinction between logical (virtual) and physical addresses, with the Memory Management Unit (MMU) performing the translation. Various allocation techniques, like contiguous (fixed/dynamic partitions) and non-contiguous (paging, segmentation), are employed. Page replacement algorithms (FIFO, LRU, Optimal) are used when memory is full to decide which page to swap out, balancing performance and overhead.')">✨ Pelajari Lebih Lanjut</button>
+            </div>
+            <div id="memoryManagementExplanation" class="llm-explanation"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-4 text-center">The Battle Against Fragmentation</h3>
+                    <p class="text-center text-slate-600 mb-6">Non-contiguous allocation techniques like Paging are vital to minimize wasted memory space (fragmentation).</p>
+                     <div class="chart-container h-64 md:h-72">
+                        <canvas id="fragmentationChart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Page Replacement Algorithm Performance</h3>
+                    <p class="text-center text-slate-600 mb-6">When memory is full, the OS must choose a page to swap out. The chosen algorithm impacts performance.</p>
+                    <div class="chart-container">
+                        <canvas id="pageReplacementChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="concurrency" class="mb-16">
+            <div class="flex items-center justify-center mb-8">
+                <h2 class="text-3xl font-bold text-center">Concurrency: Deadlocks & Synchronization</h2>
+                <button class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200" onclick="generateExplanation('concurrencyExplanation', 'Concurrency in operating systems allows multiple processes or threads to execute seemingly simultaneously. However, this introduces challenges like race conditions and data inconsistency when shared resources are involved. Deadlock is a critical state where processes are perpetually stuck, each waiting for a resource held by another. It requires four simultaneous conditions: mutual exclusion, hold and wait, no preemption, and circular wait. To prevent these issues, OS provides synchronization tools like mutex locks and semaphores, ensuring controlled access to shared resources and maintaining data integrity.')">✨ Pelajari Lebih Lanjut</button>
+            </div>
+            <div id="concurrencyExplanation" class="llm-explanation"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-4 text-center">The 4 Conditions for Deadlock</h3>
+                     <p class="text-center text-slate-600 mb-6">A deadlock can only occur if these four conditions are met simultaneously. Breaking just one prevents it.</p>
+                     <div class="relative w-64 h-64 mx-auto">
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 p-2 bg-red-100 text-red-800 rounded-lg shadow text-center">Mutual Exclusion</div>
+                        <div class="absolute top-1/2 right-0 -translate-y-1/2 p-2 bg-red-100 text-red-800 rounded-lg shadow text-center">Hold and Wait</div>
+                        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 p-2 bg-red-100 text-red-800 rounded-lg shadow text-center">No Preemption</div>
+                        <div class="absolute top-1/2 left-0 -translate-y-1/2 p-2 bg-red-100 -translate-y-1/2 text-red-800 rounded-lg shadow text-center">Circular Wait</div>
+                        <div class="absolute inset-0 flex items-center justify-center text-5xl text-red-400 font-bold">🔄</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Synchronization Tools</h3>
+                    <p class="text-center text-slate-600 mb-6">To prevent race conditions and ensure data integrity, the OS provides tools to manage access to shared resources.</p>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <span class="text-4xl mr-4 accent-text">🔓</span>
+                            <div>
+                                <h4 class="font-bold">Mutex Locks</h4>
+                                <p class="text-sm text-slate-500">A simple lock ensuring only one thread can enter a critical code section at a time.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-4xl mr-4 accent-text">🚦</span>
+                            <div>
+                                <h4 class="font-bold">Semaphores</h4>
+                                <p class="text-sm text-slate-500">An advanced counter to control access to resources with multiple instances.</p>
+                            </div>
+                        </div>
+                         <div class="flex items-center">
+                            <span class="text-4xl mr-4 accent-text">⏱️</span>
+                            <div>
+                                <h4 class="font-bold">Condition Variables</h4>
+                                <p class="text-sm text-slate-500">Allows threads to efficiently wait for a specific condition to become true before proceeding.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="storage-security" class="mb-16">
+            <div class="flex items-center justify-center mb-8">
+                <h2 class="text-3xl font-bold text-center">Data Storage & Security</h2>
+                <button class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200" onclick="generateExplanation('storageSecurityExplanation', 'The file system is the OS\'s fundamental mechanism for organizing and storing data on devices, acting as a &quot;library catalog.&quot; Its design impacts performance (speed, fragmentation), data recovery (journaling), security (permissions, encryption), and compatibility between devices. Operating system security and protection are intertwined concepts crucial for safeguarding a computer system and its resources from unauthorized access and malicious activities, ensuring confidentiality, integrity, and availability. Various mechanisms like authentication, authorization, access control, and encryption are employed to defend against threats like viruses, Trojans, worms, and denial-of-service attacks.')">✨ Pelajari Lebih Lanjut</button>
+            </div>
+            <div id="storageSecurityExplanation" class="llm-explanation"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                 <div class="card">
+                    <h3 class="text-xl font-semibold mb-4 text-center">File System Face-Off: FAT32 vs. NTFS</h3>
+                    <p class="text-center text-slate-600 mb-6">Modern file systems like NTFS offer vast improvements in security, file size, and reliability over older systems like FAT32.</p>
+                    <div class="chart-container">
+                        <canvas id="fileSystemChart"></canvas>
+                    </div>
+                </div>
+                 <div class="card">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Common Security Threats</h3>
+                     <p class="text-center text-slate-600 mb-6">Operating systems are primary targets for a wide range of malware and attacks.</p>
+                    <div class="chart-container">
+                        <canvas id="securityThreatsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+    
+    <footer class="text-center p-8 bg-slate-800 text-slate-300">
+        <p>This infographic provides a visual summary of core Operating System concepts.</p>
+        <p class="text-sm text-slate-400 mt-2">Crafted with Chart.js and Tailwind CSS.</p>
+    </footer>
+
+    <script>
+        const chartTooltipPlugin = {
+            tooltip: {
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) {
+                            return label.join(' ');
+                        } else {
+                            return label;
+                        }
+                    }
+                }
+            }
+        };
+
+        const wrapLabel = (label, maxLength = 16) => {
+            if (typeof label !== 'string' || label === null || label === undefined) {
+                return label; 
+            }
+            if (label.length <= maxLength) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + ' ' + word).trim().length > maxLength) {
+                    lines.push(currentLine.trim());
+                    currentLine = word;
+                } else {
+                    currentLine = (currentLine + ' ' + word).trim();
+                }
+            }
+            if (currentLine) lines.push(currentLine);
+            return lines;
+        };
+
+        const palette = {
+            brightBlue: '#00A6FB',
+            mediumBlue: '#0582CA',
+            darkBlue: '#006494',
+            yellow: '#FBAF00',
+            orange: '#E49B0F',
+            lightGray: '#f0f4f8',
+            darkGray: '#1e293b'
+        };
+
+        const chartFont = {
+            family: 'Inter',
+            size: 12,
+        };
+
+        new Chart(document.getElementById('cpuSchedulingChart'), {
+            type: 'radar',
+            data: {
+                labels: ['Responsiveness', 'Fairness (No Starvation)', 'Efficiency (Low Overhead)', 'Simplicity', 'Optimal Throughput'],
+                datasets: [{
+                    label: 'Round Robin',
+                    data: [5, 5, 2, 4, 3],
+                    backgroundColor: 'rgba(0, 166, 251, 0.2)',
+                    borderColor: palette.brightBlue,
+                    pointBackgroundColor: palette.brightBlue,
+                }, {
+                    label: 'FCFS',
+                    data: [1, 5, 5, 5, 1],
+                    backgroundColor: 'rgba(251, 175, 0, 0.2)',
+                    borderColor: palette.yellow,
+                    pointBackgroundColor: palette.yellow,
+                }, {
+                    label: 'SJF / SRTF',
+                    data: [3, 1, 4, 2, 5],
+                    backgroundColor: 'rgba(5, 130, 202, 0.2)',
+                    borderColor: palette.mediumBlue,
+                    pointBackgroundColor: palette.mediumBlue,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: chartTooltipPlugin,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                        pointLabels: { font: chartFont },
+                        ticks: { backdropColor: 'rgba(0,0,0,0)', color: palette.darkGray, stepSize: 1 }
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('fragmentationChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Memory in Use', 'Internal Fragmentation', 'External Fragmentation'],
+                datasets: [{
+                    data: [70, 10, 20],
+                    backgroundColor: [palette.mediumBlue, palette.orange, palette.brightBlue],
+                    borderColor: palette.lightGray,
+                    borderWidth: 4,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: chartTooltipPlugin,
+                cutout: '60%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: chartFont } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('pageReplacementChart'), {
+            type: 'bar',
+            data: {
+                labels: ['FIFO (First-In, First-Out)', 'LRU (Least Recently Used)', 'Optimal (Benchmark)'],
+                datasets: [{
+                    label: 'Number of Page Faults (Lower is Better)',
+                    data: [15, 12, 9],
+                    backgroundColor: [palette.brightBlue, palette.mediumBlue, palette.yellow],
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    ...chartTooltipPlugin,
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { beginAtZero: true, grid: { display: false } },
+                    y: { 
+                        ticks: { 
+                            callback: (val, index, ticks) => wrapLabel(ticks[index].label) 
+                        } 
+                    }
+                }
+            }
+        });
+        
+        new Chart(document.getElementById('fileSystemChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Security (Permissions, Encryption)', 'Max File/Volume Size', 'Fault Tolerance (Journaling)'],
+                datasets: [
+                    {
+                        label: 'FAT32',
+                        data: [2, 3, 1],
+                        backgroundColor: palette.orange,
+                        borderRadius: 4,
+                    },
+                    {
+                        label: 'NTFS',
+                        data: [9, 9, 8],
+                        backgroundColor: palette.mediumBlue,
+                        borderRadius: 4,
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    ...chartTooltipPlugin,
+                    legend: { position: 'bottom', labels: { font: chartFont } },
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, max: 10, ticks: { stepSize: 1 }, title: { display: true, text: 'Relative Capability (out of 10)' } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('securityThreatsChart'), {
+            type: 'bubble',
+            data: {
+                datasets: [{
+                    label: 'Virus',
+                    data: [{x: 6, y: 7, r: 15}],
+                    backgroundColor: 'rgba(251, 175, 0, 0.7)'
+                }, {
+                    label: 'Worm',
+                    data: [{x: 8, y: 8, r: 20}],
+                    backgroundColor: 'rgba(228, 155, 15, 0.7)'
+                }, {
+                    label: 'Trojan Horse',
+                    data: [{x: 5, y: 9, r: 25}],
+                    backgroundColor: 'rgba(5, 130, 202, 0.7)'
+                },{
+                    label: 'Denial-of-Service',
+                    data: [{x: 9, y: 6, r: 18}],
+                    backgroundColor: 'rgba(0, 166, 251, 0.7)'
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    ...chartTooltipPlugin,
+                    legend: { position: 'bottom', labels: { font: chartFont } },
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Ease of Spread / Prevalence →' },
+                        min: 0, max: 10
+                    },
+                    y: {
+                        title: { display: true, text: 'Potential for Damage →' },
+                        min: 0, max: 10
+                    }
+                }
+            }
+        });
+
+        // Updated generateExplanation function to display provided content
+        async function generateExplanation(targetElementId, content) {
+            const targetElement = document.getElementById(targetElementId);
+            
+            // Toggle visibility
+            if (targetElement.classList.contains('show')) {
+                targetElement.classList.remove('show');
+                targetElement.innerHTML = ''; // Clear content when hiding
+            } else {
+                targetElement.innerHTML = `<p>${content}</p>`; // Display the provided content
+                targetElement.classList.add('show');
+            }
+        }
+    </script>
+</body>
+</html>
